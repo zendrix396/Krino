@@ -2,15 +2,15 @@
 
 Intelligent loan default prediction platform using neural networks for accurate credit risk assessment. Features a stunning WebGL aurora UI, real-time validation, and interactive risk visualizations to help financial institutions make data-driven lending decisions.
 
+## Live Demo
+
+Try it now: [Krino Web App](https://krona-app.onrender.com)
+
 ## Screenshots
 
 ![Krino Home Screen](./1.png)
 ![Krino Prediction Form](./2.png)
 ![Krino Results Dashboard](./3.png)
-
-## Live Demo
-
-Try it now: [Krino Web App](https://krona-app.onrender.com)
 
 ## Project Structure
 
