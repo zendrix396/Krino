@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #000000;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Custom aurora glow effects */
+.aurora-glow::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  left: -50px;
+  right: -50px;
+  bottom: -50px;
+  background: radial-gradient(circle at center, rgba(58, 41, 255, 0.15), transparent 70%);
+  filter: blur(40px);
+  opacity: 0.7;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.card-glass {
+  background: rgba(10, 10, 15, 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 10px 30px -10px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(58, 41, 255, 0.2) inset;
+} 

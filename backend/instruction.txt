@@ -1,0 +1,292 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("credit_risk_dataset.csv.csv")
+df.info()
+
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 32581 entries, 0 to 32580
+Data columns (total 12 columns):
+ #   Column                      Non-Null Count  Dtype  
+---  ------                      --------------  -----  
+ 0   person_age                  32581 non-null  int64  
+ 1   person_income               32581 non-null  int64  
+ 2   person_home_ownership       32581 non-null  object 
+ 3   person_emp_length           31686 non-null  float64
+ 4   loan_intent                 32581 non-null  object 
+ 5   loan_grade                  32581 non-null  object 
+ 6   loan_amnt                   32581 non-null  int64  
+ 7   loan_int_rate               29465 non-null  float64
+ 8   loan_status                 32581 non-null  int64  
+ 9   loan_percent_income         32581 non-null  float64
+ 10  cb_person_default_on_file   32581 non-null  object 
+ 11  cb_person_cred_hist_length  32581 non-null  int64  
+dtypes: float64(3), int64(5), object(4)
+memory usage: 3.0+ MB
+
+df.describe()
+
+	person_age	person_income	person_emp_length	loan_amnt	loan_int_rate	loan_status	loan_percent_income	cb_person_cred_hist_length
+count	32581.000000	3.258100e+04	31686.000000	32581.000000	29465.000000	32581.000000	32581.000000	32581.000000
+mean	27.734600	6.607485e+04	4.789686	9589.371106	11.011695	0.218164	0.170203	5.804211
+std	6.348078	6.198312e+04	4.142630	6322.086646	3.240459	0.413006	0.106782	4.055001
+min	20.000000	4.000000e+03	0.000000	500.000000	5.420000	0.000000	0.000000	2.000000
+25%	23.000000	3.850000e+04	2.000000	5000.000000	7.900000	0.000000	0.090000	3.000000
+50%	26.000000	5.500000e+04	4.000000	8000.000000	10.990000	0.000000	0.150000	4.000000
+75%	30.000000	7.920000e+04	7.000000	12200.000000	13.470000	0.000000	0.230000	8.000000
+max	144.000000	6.000000e+06	123.000000	35000.000000	23.220000	1.000000	0.830000	30.000000
+
+
+df.isnull().sum()
+
+person_age	0
+person_income	0
+person_home_ownership	0
+person_emp_length	895
+loan_intent	0
+loan_grade	0
+loan_amnt	0
+loan_int_rate	3116
+loan_status	0
+loan_percent_income	0
+cb_person_default_on_file	0
+cb_person_cred_hist_length	0
+
+
+
+df["loan_int_rate"].fillna(df["loan_int_rate"].median(), inplace=True)
+df = df.dropna(subset=["person_emp_length"])
+
+
+<ipython-input-18-29cb3a9817a6>:2: FutureWarning: A value is trying to be set on a copy of a DataFrame or Series through chained assignment using an inplace method.
+The behavior will change in pandas 3.0. This inplace method will never work because the intermediate object on which we are setting values always behaves as a copy.
+
+For example, when doing 'df[col].method(value, inplace=True)', try using 'df.method({col: value}, inplace=True)' or df[col] = df[col].method(value) instead, to perform the operation inplace on the original object.
+
+
+  df["loan_int_rate"].fillna(df["loan_int_rate"].median(), inplace=True)
+
+
+
+data_counts = df["person_home_ownership"].value_counts()
+plt.pie(data_counts, labels=data_counts.index, autopct='%1.1f%%', startangle=45)
+plt.title("Breakdown of Homeownership")
+
+plt.show()
+
+
+
+class_counts = df["loan_intent"].value_counts()
+
+plt.bar(class_counts.index, class_counts.values, color='navy',zorder=3)
+plt.title("Distribution of Loan Types")
+plt.xticks(rotation=40)
+plt.grid(axis='y')
+
+plt.show()
+
+
+plt.figure(figsize=(6, 4))
+plt.boxplot(df['person_age'],vert=True)
+plt.title('Boxplot of Person Age')
+plt.ylabel('Age')
+
+plt.show()
+
+
+
+
+
+status_counts = df['loan_status'].map({0: 'Non-Default', 1: 'Default'}).value_counts()
+plt.pie(status_counts, labels=status_counts.index, autopct='%1.1f%%')
+plt.title('Loan Status Breakdown')
+
+plt.show()
+
+df = df[df['person_age'] <= 80]
+df = df[df['person_income'] <= 100000]
+df = df.drop(df.index[0])
+df.head()
+
+
+	person_age	person_income	person_home_ownership	person_emp_length	loan_intent	loan_grade	loan_amnt	loan_int_rate	loan_status	loan_percent_income	cb_person_default_on_file	cb_person_cred_hist_length
+1	21	9600	OWN	5.0	EDUCATION	B	1000	11.14	0	0.10	N	2
+2	25	9600	MORTGAGE	1.0	MEDICAL	C	5500	12.87	1	0.57	N	3
+3	23	65500	RENT	4.0	MEDICAL	C	35000	15.23	1	0.53	N	2
+4	24	54400	RENT	8.0	MEDICAL	C	35000	14.27	1	0.55	Y	4
+5	21	9900	OWN	2.0	VENTURE	A	2500	7.14	1	0.25	N	2
+
+
+
+
+from sklearn.preprocessing import LabelEncoder
+
+label_encoder = LabelEncoder()
+
+df["person_home_ownership"] = label_encoder.fit_transform(df["person_home_ownership"])
+
+
+df["loan_intent"] = label_encoder.fit_transform(df["loan_intent"])
+
+df["loan_grade"] = label_encoder.fit_transform(df["loan_grade"])
+df["cb_person_default_on_file"] = label_encoder.fit_transform(df["cb_person_default_on_file"])
+
+
+
+from sklearn.model_selection import train_test_split
+from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import accuracy_score
+y = df["loan_status"]
+X = df.drop(["loan_status"],axis=1)
+print(X,y)
+
+
+
+    person_age  person_income  person_home_ownership  person_emp_length  \
+1              21           9600                      2                5.0   
+2              25           9600                      0                1.0   
+3              23          65500                      3                4.0   
+4              24          54400                      3                8.0   
+5              21           9900                      2                2.0   
+...           ...            ...                    ...                ...   
+32574          52          65004                      3                4.0   
+32575          52          64500                      3                0.0   
+32576          57          53000                      0                1.0   
+32578          65          76000                      3                3.0   
+32580          66          42000                      3                2.0   
+
+       loan_intent  loan_grade  loan_amnt  loan_int_rate  loan_percent_income  \
+1                1           1       1000          11.14                 0.10   
+2                3           2       5500          12.87                 0.57   
+3                3           2      35000          15.23                 0.53   
+4                3           2      35000          14.27                 0.55   
+5                5           0       2500           7.14                 0.25   
+...            ...         ...        ...            ...                  ...   
+32574            4           3      20000          15.58                 0.31   
+32575            1           1       5000          11.26                 0.08   
+32576            4           2       5800          13.16                 0.11   
+32578            2           1      35000          10.99                 0.46   
+32580            3           1       6475           9.99                 0.15   
+
+       cb_person_default_on_file  cb_person_cred_hist_length  
+1                              0                           2  
+2                              0                           3  
+3                              0                           2  
+4                              1                           4  
+5                              0                           2  
+...                          ...                         ...  
+32574                          1                          19  
+32575                          0                          20  
+32576                          0                          30  
+32578                          0                          28  
+32580                          0                          30  
+
+[27514 rows x 11 columns] 1        0
+2        1
+3        1
+4        1
+5        1
+        ..
+32574    1
+32575    0
+32576    0
+32578    1
+32580    0
+Name: loan_status, Length: 27514, dtype: int64
+
+
+X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.25,random_state=9)
+print(len(X_train))
+print(len(X_test))
+
+
+ann_clf1 = MLPClassifier(hidden_layer_sizes=(32,16),activation='relu',learning_rate_init=0.001,learning_rate='adaptive',max_iter=300,early_stopping=True,verbose=True)
+
+
+
+
+ann_clf1.fit(X_train,y_train)
+
+
+
+
+plt.plot(ann_clf1.loss_curve_)
+plt.title("MLP Loss Curve")
+plt.xlabel("Iterations")
+plt.ylabel("Loss")
+
+plt.show()
+
+ann_clf1.score(X_train,y_train)
+
+
+y_pred=ann_clf1.predict(X_test)
+accuracy_score(y_test,y_pred)
+
+y = df["loan_status"]
+X = df.drop(["loan_status"],axis=1)
+
+
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=2)
+X_train = scaler.fit_transform(X_train)
+
+X_test = scaler.transform(X_test)
+
+
+ann_clf2 = MLPClassifier(hidden_layer_sizes=(32, 16), activation="relu", max_iter=2000, random_state=42, verbose=True)
+ann_clf2.fit(X_train, y_train)
+
+
+
+plt.plot(ann_clf2.loss_curve_)
+plt.title("MLP Loss Curve")
+plt.xlabel("Iterations")
+plt.ylabel("Loss")
+
+plt.show()
+
+
+
+
+ann_clf2.score(X_train,y_train)
+
+
+
+y_pred=ann_clf2.predict(X_test)
+accuracy_score(y_test,y_pred)
+
+
+y = df["loan_status"]
+X = df.drop(["loan_status"],axis=1)
+
+
+scaler = StandardScaler()
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=6)
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+
+ann_clf3 = MLPClassifier(hidden_layer_sizes=(32,16,8), activation="relu", max_iter=200, random_state=17,learning_rate_init=0.01,verbose=True,learning_rate="adaptive")
+ann_clf3.fit(X_train, y_train)
+
+
+plt.plot(ann_clf3.loss_curve_)
+plt.title("MLP Loss Curve")
+plt.xlabel("Iterations")
+plt.ylabel("Loss")
+
+plt.show()
+
+
+
+ann_clf3.score(X_train,y_train)
+
+
+y_pred=ann_clf3.predict(X_test)
+accuracy_score(y_test,y_pred)
+
+
+from sklearn.metrics import classification_report
+print(classification_report(y_test,y_pred))\
