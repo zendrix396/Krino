@@ -10,7 +10,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPClassifier
 from typing import Literal
 
-app = FastAPI(title="Credit Risk Prediction API")
+app = FastAPI(title="Krino API")
 
 # Fix CORS setup with explicit origins
 app.add_middleware(
@@ -107,7 +107,7 @@ def load_model():
 
 @app.get("/")
 def read_root():
-    return {"message": "Credit Risk Prediction API is running"}
+    return {"message": "Krino API is running"}
 
 @app.post("/train")
 def train_endpoint():

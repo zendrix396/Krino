@@ -142,10 +142,10 @@ const LoanPredictionForm = () => {
             animationSpeed={3}
             className="text-3xl md:text-4xl lg:text-5xl font-bold"
           >
-            Credit Risk Predictor
+            Krino
           </GradientText>
         </h1>
-        <p className="text-blue-100/70 mt-4 mb-2">Enter loan details to predict default probability</p>
+        <p className="text-blue-100/70 mt-4 mb-2">AI-powered loan default prediction</p>
         
         {/* Server status indicator */}
         <div className="flex items-center justify-center mt-2">

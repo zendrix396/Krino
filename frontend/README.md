@@ -1,41 +1,34 @@
-# Credit Risk Prediction Frontend
+# Krino Frontend
 
-Modern React frontend for the Credit Risk Prediction application.
+Modern React frontend for the Krino application.
 
 ## Features
 
-- Beautiful animated Aurora background using WebGL (OGL)
-- Interactive spotlight cards with hover effects
-- Gradient animated text elements
-- Fully responsive design with Tailwind CSS
-- Real-time form validation
-- Clear visual feedback for predictions
+- Interactive form for loan prediction
+- Real-time validation
+- Beautiful UI with WebGL aurora effects
+- Responsive design for all devices
 
-## Setup
+## Getting Started
 
 1. Install dependencies:
-   ```
-   npm install
-   ```
-
-2. Start the development server:
-   ```
-   npm run dev
-   ```
-
-The frontend will be available at http://localhost:5173
-
-## Building for Production
-
+```bash
+npm install
 ```
+
+2. Run development server:
+```bash
+npm run dev
+```
+
+3. Build for production:
+```bash
 npm run build
 ```
 
 ## Technologies Used
 
 - React
-- Framer Motion for animations
-- OGL for WebGL graphics
-- Tailwind CSS for styling
-- Axios for API communication
-- Vite for build tooling
+- Tailwind CSS
+- Framer Motion
+- OGL (WebGL)

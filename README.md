@@ -1,6 +1,6 @@
-# Credit Risk Prediction Application
+# Krino
 
-A full-stack application for predicting credit risk using machine learning.
+An AI-powered loan default prediction application with neural network modeling.
 
 ## Project Structure
 
