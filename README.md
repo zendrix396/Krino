@@ -1,11 +1,16 @@
 # Krino
 
-An AI-powered loan default prediction application with neural network modeling.
+Intelligent loan default prediction platform using neural networks for accurate credit risk assessment. Features a stunning WebGL aurora UI, real-time validation, and interactive risk visualizations to help financial institutions make data-driven lending decisions.
 
+## Screenshots
 
-## Deployment link: 
-Try it now: [Krino Web App](https://krino-app.onrender.com)
+![Krino Home Screen](./1.png)
+![Krino Prediction Form](./2.png)
+![Krino Results Dashboard](./3.png)
 
+## Live Demo
+
+Try it now: [Krino Web App](https://krona-app.onrender.com)
 
 ## Project Structure
 
@@ -60,7 +65,7 @@ Try it now: [Krino Web App](https://krino-app.onrender.com)
 
 ## Usage
 
-1. Open your browser to [http://localhost:5173](http://localhost:5173)
+1. Open your browser to [http://localhost:5173](http://localhost:5173) or visit the [live demo](https://krona-app.onrender.com)
 2. Enter loan application details in the form
 3. Click "Predict Loan Status" to get the prediction result
 4. View the prediction result and default probability
