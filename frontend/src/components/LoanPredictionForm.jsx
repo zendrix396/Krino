@@ -78,7 +78,7 @@ const LoanPredictionForm = () => {
       if (serverStatus !== 'online') {
         setResult({
           error: true,
-          message: 'Server is currently unreachable. Please ensure the backend is running at http://localhost:8000'
+          message: 'Server is currently unreachable. Please ensure the API service is running.'
         });
         return;
       }
@@ -107,7 +107,7 @@ const LoanPredictionForm = () => {
       
       // Show more specific error messages
       if (error.message.includes('Failed to fetch') || error.message.includes('Network Error')) {
-        errorMessage = 'Cannot connect to the server. Please make sure the backend is running at http://localhost:8000';
+        errorMessage = 'Cannot connect to the server. The API service might be temporarily unavailable.';
       } else if (error.message.includes('timeout')) {
         errorMessage = 'Server request timed out. The server might be overloaded.';
       } else if (error.message.includes('API Error')) {

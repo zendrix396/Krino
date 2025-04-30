@@ -33,8 +33,10 @@ Backend API built with FastAPI for loan default prediction.
 
 Once the server is running, you can access the interactive API documentation at:
 
-- http://localhost:8000/docs (Swagger UI)
-- http://localhost:8000/redoc (ReDoc)
+- Local development: http://localhost:8000/docs (Swagger UI)
+- Local development: http://localhost:8000/redoc (ReDoc)
+- Production: https://krino.onrender.com/docs (Swagger UI)
+- Production: https://krino.onrender.com/redoc (ReDoc)
 
 ## Technologies
 
