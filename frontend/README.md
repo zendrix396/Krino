@@ -1,6 +1,6 @@
-# Krino Frontend
+# CredSetu Frontend
 
-Modern React frontend for the Krino application.
+Modern React frontend for the CredSetu application.
 
 ## Features
 
