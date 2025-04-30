@@ -2,6 +2,11 @@
 
 An AI-powered loan default prediction application with neural network modeling.
 
+
+## Deployment link: 
+Try it now: [Krino Web App](https://krona-app.onrender.com)
+
+
 ## Project Structure
 
 - **backend/** - FastAPI backend with ML model

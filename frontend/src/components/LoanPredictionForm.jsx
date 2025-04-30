@@ -142,7 +142,7 @@ const LoanPredictionForm = () => {
             animationSpeed={3}
             className="text-3xl md:text-4xl lg:text-5xl font-bold"
           >
-            CredSetu
+            Krino
           </GradientText>
         </h1>
         <p className="text-blue-100/70 mt-4 mb-2">AI-powered loan default prediction</p>
