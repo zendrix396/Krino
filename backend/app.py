@@ -2,6 +2,8 @@ import os
 import joblib
 import pandas as pd
 import numpy as np
+# Import specific random generator for compatibility
+from numpy.random import RandomState, MT19937
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
@@ -9,6 +11,10 @@ from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPClassifier
 from typing import Literal
+
+# Set NumPy random seed safely
+np.random.seed(17)
+random_state = RandomState(MT19937(17))
 
 app = FastAPI(title="Krino API")
 
@@ -82,12 +88,12 @@ def train_model():
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=6)
     X_train_scaled = scaler.fit_transform(X_train)
     
-    # Train model
+    # Train model - use integer for random_state instead of numpy generator
     model = MLPClassifier(
         hidden_layer_sizes=(32, 16, 8),
         activation="relu",
         max_iter=200,
-        random_state=17,
+        random_state=17,  # Use integer instead of numpy.random object
         learning_rate_init=0.01,
         learning_rate="adaptive"
     )
