@@ -9,7 +9,17 @@ const fetchWithTimeout = async (url, options = {}, timeout = 5000) => {
   const timeoutId = setTimeout(() => controller.abort(), timeout);
   
   try {
-    const response = await fetch(url, { ...options, signal });
+    const response = await fetch(url, { 
+      ...options,
+      signal,
+      mode: 'cors',
+      credentials: 'omit', // Don't send credentials for cross-origin requests
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        ...options.headers
+      }
+    });
     clearTimeout(timeoutId);
     
     // Check if the response is ok (status in the range 200-299)
@@ -33,13 +43,7 @@ const loanPredictionService = {
   // Check if API is running
   checkApiStatus: async () => {
     try {
-      const response = await fetchWithTimeout(`${API_BASE_URL}/`, {
-        method: 'GET',
-        mode: 'cors', // Important for CORS
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await fetchWithTimeout(`${API_BASE_URL}/`);
       return response;
     } catch (error) {
       console.error('API status check failed:', error);
@@ -51,11 +55,7 @@ const loanPredictionService = {
   trainModel: async () => {
     try {
       const response = await fetchWithTimeout(`${API_BASE_URL}/train`, {
-        method: 'POST',
-        mode: 'cors', // Important for CORS
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        method: 'POST'
       });
       return response;
     } catch (error) {
@@ -69,11 +69,7 @@ const loanPredictionService = {
     try {
       const response = await fetchWithTimeout(`${API_BASE_URL}/predict`, {
         method: 'POST',
-        mode: 'cors', // Important for CORS
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(loanData),
+        body: JSON.stringify(loanData)
       });
       return response;
     } catch (error) {

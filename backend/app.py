@@ -15,10 +15,16 @@ app = FastAPI(title="Krino API")
 # Fix CORS setup with explicit origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "https://krino-app.onrender.com",
+        "*"  # Allow all origins as fallback
+    ],
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"],
     allow_headers=["*"],
+    expose_headers=["Content-Type", "X-Requested-With"],
 )
 
 # Model paths
@@ -106,6 +112,7 @@ def load_model():
     return model, scaler, label_encoders
 
 @app.get("/")
+@app.head("/")  # Add HEAD method support for health checks
 def read_root():
     return {"message": "Krino API is running"}
 
