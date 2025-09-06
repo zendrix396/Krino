@@ -2,7 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import SpotlightCard from './SpotlightCard';
 import GradientText from './GradientText';
+import CustomDropdown from './CustomDropdown';
 import loanPredictionService from '../services/api';
+import { saveFormData, loadFormData, clearFormData, hasFormData } from '../utils/cookies';
 
 const LoanPredictionForm = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -23,9 +25,15 @@ const LoanPredictionForm = () => {
     cb_person_cred_hist_length: 4
   });
 
-  // Check server status on component mount
+  // Check server status on component mount and load saved form data
   useEffect(() => {
     checkServerStatus();
+    
+    // Load saved form data from cookies
+    const savedFormData = loadFormData();
+    if (savedFormData) {
+      setFormData(savedFormData);
+    }
 
     // Check server status every 30 seconds
     const interval = setInterval(checkServerStatus, 30000);
@@ -38,6 +46,14 @@ const LoanPredictionForm = () => {
       resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }, [result]);
+
+  // Save form data to cookies whenever form data changes
+  useEffect(() => {
+    // Only save if form data has been initialized (not the default values)
+    if (formData.person_age !== 27 || formData.person_income !== 50000) {
+      saveFormData(formData);
+    }
+  }, [formData]);
 
   const checkServerStatus = async () => {
     try {
@@ -140,7 +156,7 @@ const LoanPredictionForm = () => {
           <GradientText
             colors={["#40ffaa", "#4079ff", "#40ffaa", "#4079ff", "#40ffaa"]}
             animationSpeed={3}
-            className="text-3xl md:text-4xl lg:text-5xl font-bold"
+            className="text-3xl md:text-4xl lg:text-5xl font-bold p-2"
           >
             Krino
           </GradientText>
@@ -206,18 +222,19 @@ const LoanPredictionForm = () => {
             
             <div>
               <label className="block text-blue-100 text-sm mb-1">Home Ownership</label>
-              <select 
+              <CustomDropdown
                 name="person_home_ownership"
                 value={formData.person_home_ownership}
                 onChange={handleInputChange}
-                className="w-full bg-black/30 text-white border border-blue-500/30 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                options={[
+                  { value: 'RENT', label: 'Rent' },
+                  { value: 'MORTGAGE', label: 'Mortgage' },
+                  { value: 'OWN', label: 'Own' },
+                  { value: 'OTHER', label: 'Other' }
+                ]}
+                placeholder="Select home ownership"
                 required
-              >
-                <option value="RENT">Rent</option>
-                <option value="MORTGAGE">Mortgage</option>
-                <option value="OWN">Own</option>
-                <option value="OTHER">Other</option>
-              </select>
+              />
             </div>
 
             <div>
@@ -235,16 +252,17 @@ const LoanPredictionForm = () => {
 
             <div>
               <label className="block text-blue-100 text-sm mb-1">Has Defaulted Before</label>
-              <select 
+              <CustomDropdown
                 name="cb_person_default_on_file"
                 value={formData.cb_person_default_on_file}
                 onChange={handleInputChange}
-                className="w-full bg-black/30 text-white border border-blue-500/30 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                options={[
+                  { value: 'N', label: 'No' },
+                  { value: 'Y', label: 'Yes' }
+                ]}
+                placeholder="Select default status"
                 required
-              >
-                <option value="N">No</option>
-                <option value="Y">Yes</option>
-              </select>
+              />
             </div>
 
             <div>
@@ -266,39 +284,41 @@ const LoanPredictionForm = () => {
             
             <div>
               <label className="block text-blue-100 text-sm mb-1">Loan Intent</label>
-              <select 
+              <CustomDropdown
                 name="loan_intent"
                 value={formData.loan_intent}
                 onChange={handleInputChange}
-                className="w-full bg-black/30 text-white border border-blue-500/30 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                options={[
+                  { value: 'PERSONAL', label: 'Personal' },
+                  { value: 'EDUCATION', label: 'Education' },
+                  { value: 'MEDICAL', label: 'Medical' },
+                  { value: 'VENTURE', label: 'Venture' },
+                  { value: 'HOMEIMPROVEMENT', label: 'Home Improvement' },
+                  { value: 'DEBTCONSOLIDATION', label: 'Debt Consolidation' }
+                ]}
+                placeholder="Select loan intent"
                 required
-              >
-                <option value="PERSONAL">Personal</option>
-                <option value="EDUCATION">Education</option>
-                <option value="MEDICAL">Medical</option>
-                <option value="VENTURE">Venture</option>
-                <option value="HOMEIMPROVEMENT">Home Improvement</option>
-                <option value="DEBTCONSOLIDATION">Debt Consolidation</option>
-              </select>
+              />
             </div>
             
             <div>
               <label className="block text-blue-100 text-sm mb-1">Loan Grade</label>
-              <select 
+              <CustomDropdown
                 name="loan_grade"
                 value={formData.loan_grade}
                 onChange={handleInputChange}
-                className="w-full bg-black/30 text-white border border-blue-500/30 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                options={[
+                  { value: 'A', label: 'A - Excellent' },
+                  { value: 'B', label: 'B - Good' },
+                  { value: 'C', label: 'C - Fair' },
+                  { value: 'D', label: 'D - Poor' },
+                  { value: 'E', label: 'E - Bad' },
+                  { value: 'F', label: 'F - Very Bad' },
+                  { value: 'G', label: 'G - Terrible' }
+                ]}
+                placeholder="Select loan grade"
                 required
-              >
-                <option value="A">A - Excellent</option>
-                <option value="B">B - Good</option>
-                <option value="C">C - Fair</option>
-                <option value="D">D - Poor</option>
-                <option value="E">E - Bad</option>
-                <option value="F">F - Very Bad</option>
-                <option value="G">G - Terrible</option>
-              </select>
+              />
             </div>
             
             <div>
@@ -344,8 +364,8 @@ const LoanPredictionForm = () => {
           </div>
         </div>
 
-        {/* Submit Button */}
-        <div className="mt-8">
+        {/* Submit Button and Clear Data Button */}
+        <div className="mt-8 space-y-4">
           <motion.button
             type="submit"
             className={`w-full py-3 px-4 rounded-md font-bold text-white 
@@ -371,6 +391,37 @@ const LoanPredictionForm = () => {
               "Predict Loan Status"
             )}
           </motion.button>
+          
+          {/* Clear Saved Data Button */}
+          {hasFormData() && (
+            <div className="flex justify-center">
+              <motion.button
+                type="button"
+                onClick={() => {
+                  clearFormData();
+                  // Reset to default values
+                  setFormData({
+                    person_age: 27,
+                    person_income: 50000,
+                    person_home_ownership: 'RENT',
+                    person_emp_length: 5.0,
+                    loan_intent: 'PERSONAL',
+                    loan_grade: 'C',
+                    loan_amnt: 15000,
+                    loan_int_rate: 12.5,
+                    loan_percent_income: 0.3,
+                    cb_person_default_on_file: 'N',
+                    cb_person_cred_hist_length: 4
+                  });
+                }}
+                className="text-xs text-blue-300/70 hover:text-blue-300 underline transition-colors duration-200"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Clear Saved Data
+              </motion.button>
+            </div>
+          )}
         </div>
       </form>
 

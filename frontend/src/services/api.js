@@ -1,5 +1,5 @@
 // Using fetch instead of axios to avoid CORS issues
-const API_BASE_URL = 'https://krino.onrender.com';
+const API_BASE_URL = 'https://krino.zendrix.dev';
 
 // Helper function to handle API requests
 const fetchWithTimeout = async (url, options = {}, timeout = 5000) => {
