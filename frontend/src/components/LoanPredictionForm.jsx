@@ -20,7 +20,6 @@ const LoanPredictionForm = () => {
     loan_grade: 'C',
     loan_amnt: 15000,
     loan_int_rate: 12.5,
-    loan_percent_income: 0.3,
     cb_person_default_on_file: 'N',
     cb_person_cred_hist_length: 4
   });
@@ -72,7 +71,7 @@ const LoanPredictionForm = () => {
     // Convert number inputs
     if (['person_age', 'person_income', 'loan_amnt', 'cb_person_cred_hist_length'].includes(name)) {
       setFormData({ ...formData, [name]: parseInt(value) });
-    } else if (['person_emp_length', 'loan_int_rate', 'loan_percent_income'].includes(name)) {
+    } else if (['person_emp_length', 'loan_int_rate'].includes(name)) {
       setFormData({ ...formData, [name]: parseFloat(value) });
     } else {
       setFormData({ ...formData, [name]: value });
@@ -112,8 +111,14 @@ const LoanPredictionForm = () => {
         console.warn('API check failed, will try prediction anyway');
       }
 
+      // Calculate loan_percent_income automatically
+      const dataToSend = {
+        ...formData,
+        loan_percent_income: formData.loan_amnt / formData.person_income
+      };
+
       // Make prediction
-      const predictionResult = await loanPredictionService.predictLoanDefault(formData);
+      const predictionResult = await loanPredictionService.predictLoanDefault(dataToSend);
       setResult(predictionResult);
       setServerStatus('online');
     } catch (error) {
@@ -142,7 +147,7 @@ const LoanPredictionForm = () => {
 
   // Calculate button states based on form values
   const isHighRisk = formData.loan_int_rate > 15 || 
-                     formData.loan_percent_income > 0.5 || 
+                     (formData.loan_amnt / formData.person_income) > 0.5 || 
                      (formData.cb_person_default_on_file === 'Y' && formData.loan_grade > 'C');
 
   return (
@@ -265,17 +270,6 @@ const LoanPredictionForm = () => {
               />
             </div>
 
-            <div>
-              <label className="block text-blue-100 text-sm mb-1">Credit History Length (years)</label>
-              <input 
-                type="number"
-                name="cb_person_cred_hist_length"
-                value={formData.cb_person_cred_hist_length}
-                onChange={handleInputChange}
-                className="w-full bg-black/30 text-white border border-blue-500/30 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-                required
-              />
-            </div>
           </div>
 
           {/* Loan Details Section */}
@@ -345,22 +339,19 @@ const LoanPredictionForm = () => {
                 required
               />
             </div>
-            
+
             <div>
-              <label className="block text-blue-100 text-sm mb-1">Loan Percent Income</label>
+              <label className="block text-blue-100 text-sm mb-1">Credit History Length (years)</label>
               <input 
-                type="number" 
-                step="0.01"
-                min="0" 
-                max="1"
-                name="loan_percent_income"
-                value={formData.loan_percent_income}
+                type="number"
+                name="cb_person_cred_hist_length"
+                value={formData.cb_person_cred_hist_length}
                 onChange={handleInputChange}
                 className="w-full bg-black/30 text-white border border-blue-500/30 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                 required
               />
-              <p className="text-xs text-blue-200/70 mt-1">Ratio of loan amount to annual income (0-1)</p>
             </div>
+            
           </div>
         </div>
 
@@ -409,7 +400,6 @@ const LoanPredictionForm = () => {
                     loan_grade: 'C',
                     loan_amnt: 15000,
                     loan_int_rate: 12.5,
-                    loan_percent_income: 0.3,
                     cb_person_default_on_file: 'N',
                     cb_person_cred_hist_length: 4
                   });
